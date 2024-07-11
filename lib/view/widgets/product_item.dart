@@ -25,8 +25,8 @@ class ProductItem extends StatelessWidget {
           children: [
             Image.asset(
               imageId,
-              height: 60,
-              width: 60,
+              height: 50,
+              width: 50,
             ),
             Text(name,
                 style:
