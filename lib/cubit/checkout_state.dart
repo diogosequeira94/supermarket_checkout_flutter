@@ -15,8 +15,11 @@ final class CheckoutLoadInProgress extends CheckoutState {
 }
 
 final class CheckoutLoadSuccess extends CheckoutState {
+  final List<Product> selectedProducts;
+
+  const CheckoutLoadSuccess({required this.selectedProducts});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [selectedProducts];
 }
 
 final class CheckoutLoadError extends CheckoutState {

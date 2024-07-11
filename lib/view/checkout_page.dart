@@ -1,4 +1,5 @@
 import 'package:fluro_checkout/cubit/checkout_cubit.dart';
+import 'package:fluro_checkout/view/widgets/selected_products_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,14 +24,19 @@ class CheckoutPage extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else if (state is CheckoutLoadSuccess) {
-            return const Column(
+            return Column(
               children: [
                 SingleChildScrollView(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [],
+                    children: [
+                      SelectedProductsList(
+                        products: state.selectedProducts,
+                        allowRemoval: false,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -44,6 +50,5 @@ class CheckoutPage extends StatelessWidget {
         },
       ),
     );
-    ;
   }
 }

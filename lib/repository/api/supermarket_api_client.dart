@@ -18,8 +18,8 @@ class SupermarketApiClient {
       final response =
           await rootBundle.loadString('lib/repository/data/mock-products.json');
       final productsJson = json.decode(response)['products'] as List<dynamic>;
-      // Simulates the request time; Hopefully shorter in a real scenario :)
-      await Future.delayed(const Duration(seconds: 2));
+      // Simulates the request time
+      await Future.delayed(const Duration(seconds: 1));
       return [
         for (final product in productsJson) Product.fromJson(product),
       ];

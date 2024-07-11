@@ -20,7 +20,7 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         /// Apply Promotions
       }
 
-      emit(CheckoutLoadSuccess());
+      emit(CheckoutLoadSuccess(selectedProducts: checkoutProducts));
     } on Object catch (e) {
       emit(CheckoutLoadError(errorMessage: e.toString()));
     }
