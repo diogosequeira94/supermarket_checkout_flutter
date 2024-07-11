@@ -1,4 +1,8 @@
+import 'package:fluro_checkout/bloc/supermarket_bloc.dart';
+import 'package:fluro_checkout/repository/api/supermarket_api_client.dart';
+import 'package:fluro_checkout/repository/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +13,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fluro Supermarket',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    const supermarketRepository =
+        SupermarketRepository(supermarketApiClient: SupermarketApiClient());
+    return BlocProvider(
+      create: (context) =>
+          SupermarketBloc(supermarketRepository: supermarketRepository),
+      child: MaterialApp(
+        title: 'Fluro Supermarket',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
   }
 }

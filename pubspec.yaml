@@ -13,6 +13,8 @@ dependencies:
   json_annotation: ^4.9.0
   equatable: ^2.0.5
   lumberdash: ^3.0.0
+  flutter_bloc: ^8.1.6
+  bloc: ^8.1.4
 
 dev_dependencies:
   flutter_test:
