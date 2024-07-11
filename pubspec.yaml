@@ -12,6 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   json_annotation: ^4.9.0
   equatable: ^2.0.5
+  lumberdash: ^3.0.0
 
 dev_dependencies:
   flutter_test:
