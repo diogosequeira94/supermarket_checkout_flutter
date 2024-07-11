@@ -14,21 +14,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const supermarketRepository =
-        SupermarketRepository(supermarketApiClient: SupermarketApiClient());
-    return BlocProvider(
-      create: (context) =>
-          SupermarketBloc(supermarketRepository: supermarketRepository)
-            ..add(
-              const SupermarketLoadStarted(),
-            ),
-      child: MaterialApp(
-        title: 'Fluro Supermarket',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-          useMaterial3: true,
+    return RepositoryProvider(
+      create: (context) => SupermarketRepository(
+          supermarketApiClient: const SupermarketApiClient()),
+      child: BlocProvider(
+        create: (context) => SupermarketBloc(
+            supermarketRepository: context.read<SupermarketRepository>())
+          ..add(
+            const SupermarketLoadStarted(),
+          ),
+        child: MaterialApp(
+          title: 'Fluro Supermarket',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+            useMaterial3: true,
+          ),
+          home: const HomePage(),
         ),
-        home: const HomePage(),
       ),
     );
   }

@@ -1,8 +1,12 @@
 import 'package:fluro_checkout/bloc/supermarket_bloc.dart';
-import 'package:fluro_checkout/view/widgets/products_list.dart';
-import 'package:fluro_checkout/view/widgets/selected_products_list.dart';
+import 'package:fluro_checkout/cubit/checkout_cubit.dart';
+import 'package:fluro_checkout/repository/supermarket_repository.dart';
+import 'package:fluro_checkout/view/checkout_page.dart';
+import 'package:fluro_checkout/view/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../repository/repository.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -66,35 +70,29 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Flexible(
+                      Flexible(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Total: 0',
-                              style: TextStyle(fontSize: 18.0),
+                              'Total: ${state.totalAmount.toString()}p',
+                              style: const TextStyle(fontSize: 18.0),
                             ),
-                            SizedBox(height: 4.0),
-                            Row(
+                            const SizedBox(height: 4.0),
+                            const Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(
                                   Icons.info,
                                   color: Colors.white,
                                 ),
-                                SizedBox(
-                                    width:
-                                        4.0), // Add some spacing between icon and text
+                                SizedBox(width: 4.0),
                                 Flexible(
                                   child: Text(
                                     'Promotions are calculated on checkout',
-                                    style: TextStyle(
-                                        color: Colors
-                                            .black), // Ensure the text color is visible
-                                    maxLines:
-                                        2, // You can adjust this to the desired number of lines
-                                    overflow: TextOverflow
-                                        .ellipsis, // Add ellipsis if the text overflows
+                                    style: TextStyle(color: Colors.black),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
@@ -104,7 +102,18 @@ class HomePage extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          // Your onPressed code here
+                          if (state.selectedProducts.isEmpty) {
+                            const snackBar = SnackBar(
+                              content:
+                                  Text('Please select some products first :)'),
+                              duration: Duration(seconds: 2),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else {
+                            _navigateToCheckout(
+                                context, state.selectedProducts);
+                          }
                         },
                         child: const Text('Checkout'),
                       ),
@@ -120,6 +129,22 @@ class HomePage extends StatelessWidget {
           }
           return const SizedBox.shrink();
         },
+      ),
+    );
+  }
+
+  void _navigateToCheckout(
+      BuildContext context, List<Product> selectedProducts) {
+    final supermarketRepository = context.read<SupermarketRepository>();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (_) =>
+              CheckoutCubit(supermarketRepository: supermarketRepository)
+                ..getCurrentPromotions(selectedProducts),
+          child: const CheckoutPage(),
+        ),
       ),
     );
   }

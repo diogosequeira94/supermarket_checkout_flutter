@@ -22,7 +22,10 @@ class SelectedProductsList extends StatelessWidget {
         return SelectedProductWidget(
           product: product,
           onTap: () {
-            supermarketBloc.add(SupermarketRemoveProduct(product: product));
+            supermarketBloc.add(
+              SupermarketProductOperationPressed(
+                  operation: ProductOperation.remove, product: product),
+            );
           },
         );
       },

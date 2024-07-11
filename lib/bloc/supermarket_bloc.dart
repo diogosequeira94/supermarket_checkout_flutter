@@ -12,15 +12,14 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   SupermarketBloc({required SupermarketRepository supermarketRepository})
       : _supermarketRepository = supermarketRepository,
         super(const SupermarketState(
-            status: SupermarketStatus.initial, selectedProducts: [])) {
+            status: SupermarketStatus.initial,
+            selectedProducts: [],
+            totalAmount: 0)) {
     on<SupermarketLoadStarted>((event, emit) async {
       await _getProducts(emit);
     });
-    on<SupermarketAddProduct>((event, emit) {
-      _addProduct(event, emit);
-    });
-    on<SupermarketRemoveProduct>((event, emit) {
-      _removeProduct(event, emit);
+    on<SupermarketProductOperationPressed>((event, emit) {
+      _performProductListOperation(event, emit);
     });
   }
 
@@ -41,18 +40,23 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
     }
   }
 
-  void _addProduct(
-      SupermarketAddProduct event, Emitter<SupermarketState> emit) {
-    final newSelectedProductsList = List<Product>.from(state.selectedProducts);
-    newSelectedProductsList.add(event.product);
-    emit(state.copyWith(selectedProducts: newSelectedProductsList));
+  void _performProductListOperation(SupermarketProductOperationPressed event,
+      Emitter<SupermarketState> emit) {
+    final selectedProductsList = List<Product>.from(state.selectedProducts);
+
+    event.operation == ProductOperation.add
+        ? selectedProductsList.add(event.product)
+        : selectedProductsList.remove(event.product);
+
+    final updatedAmount = _updateTotalAmount(selectedProductsList);
+    emit(state.copyWith(
+        selectedProducts: selectedProductsList, totalAmount: updatedAmount));
   }
 
-  void _removeProduct(
-      SupermarketRemoveProduct event, Emitter<SupermarketState> emit) {
-    final newSelectedProductsList = List<Product>.from(state.selectedProducts);
-    newSelectedProductsList.remove(event.product);
-    emit(state.copyWith(selectedProducts: newSelectedProductsList));
+  int _updateTotalAmount(List<Product> selectedProducts) {
+    final updatedAmount =
+        selectedProducts.fold(0, (total, product) => total + product.price);
+    return updatedAmount;
   }
 
   String _convertToExceptionLog(Object exception) {

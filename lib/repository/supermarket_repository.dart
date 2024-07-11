@@ -3,11 +3,19 @@ import 'package:lumberdash/lumberdash.dart';
 import 'models/models.dart';
 
 class SupermarketRepository {
-  /// ToDo: Turn into Singleton or RepoProvider
   final SupermarketApiClient _supermarketApiClient;
-  const SupermarketRepository(
+
+  SupermarketRepository._internal(
       {required SupermarketApiClient supermarketApiClient})
       : _supermarketApiClient = supermarketApiClient;
+
+  static SupermarketRepository? _instance;
+
+  factory SupermarketRepository(
+      {required SupermarketApiClient supermarketApiClient}) {
+    return _instance ??= SupermarketRepository._internal(
+        supermarketApiClient: supermarketApiClient);
+  }
 
   Future<List<Product>> fetchProducts() async {
     try {
@@ -21,7 +29,7 @@ class SupermarketRepository {
     }
   }
 
-  Future<Object> getPromotions() async {
+  Future<Object?> getPromotions() async {
     return Object();
   }
 

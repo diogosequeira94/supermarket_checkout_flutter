@@ -1,5 +1,10 @@
 part of 'supermarket_bloc.dart';
 
+enum ProductOperation {
+  add,
+  remove,
+}
+
 abstract class SupermarketEvent extends Equatable {
   const SupermarketEvent();
 }
@@ -11,18 +16,14 @@ final class SupermarketLoadStarted extends SupermarketEvent {
   List<Object?> get props => [];
 }
 
-final class SupermarketAddProduct extends SupermarketEvent {
+final class SupermarketProductOperationPressed extends SupermarketEvent {
+  final ProductOperation operation;
   final Product product;
-  const SupermarketAddProduct({required this.product});
+  const SupermarketProductOperationPressed({
+    required this.operation,
+    required this.product,
+  });
 
   @override
-  List<Object?> get props => [product];
-}
-
-final class SupermarketRemoveProduct extends SupermarketEvent {
-  final Product product;
-  const SupermarketRemoveProduct({required this.product});
-
-  @override
-  List<Object?> get props => [product];
+  List<Object?> get props => [operation, product];
 }
