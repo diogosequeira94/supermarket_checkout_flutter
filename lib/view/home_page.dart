@@ -43,9 +43,10 @@ class HomePage extends StatelessWidget {
                     ProductsList(
                       products: state.products!,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: Text('Selected products: 0'),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Text(
+                          'Selected products: ${state.selectedProducts.length}'),
                     ),
                   ],
                 );

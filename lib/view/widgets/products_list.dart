@@ -1,6 +1,8 @@
+import 'package:fluro_checkout/bloc/supermarket_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:fluro_checkout/repository/models/product.dart';
 import 'package:fluro_checkout/view/widgets/product_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductsList extends StatelessWidget {
   final List<Product> products;
@@ -9,6 +11,7 @@ class ProductsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final supermarketBloc = context.read<SupermarketBloc>();
     return GridView.builder(
       shrinkWrap: true,
       itemCount: products.length,
@@ -21,6 +24,8 @@ class ProductsList extends StatelessWidget {
       itemBuilder: (context, index) {
         final product = products[index];
         return ProductItem(
+          onTap: () =>
+              supermarketBloc.add(SupermarketAddProduct(product: product)),
           name: product.name,
           price: product.price,
           imageId: product.imageId,

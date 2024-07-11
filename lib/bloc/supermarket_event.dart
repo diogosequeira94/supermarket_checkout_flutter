@@ -10,3 +10,11 @@ final class SupermarketLoadStarted extends SupermarketEvent {
   @override
   List<Object?> get props => [];
 }
+
+final class SupermarketAddProduct extends SupermarketEvent {
+  final Product product;
+  const SupermarketAddProduct({required this.product});
+
+  @override
+  List<Object?> get props => [product];
+}

@@ -12,9 +12,15 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   final SupermarketRepository _supermarketRepository;
   SupermarketBloc({required SupermarketRepository supermarketRepository})
       : _supermarketRepository = supermarketRepository,
-        super(const SupermarketState(status: SupermarketStatus.initial)) {
+        super(const SupermarketState(
+          status: SupermarketStatus.initial,
+          selectedProducts: [],
+        )) {
     on<SupermarketLoadStarted>((event, emit) async {
       await _getProducts(emit);
+    });
+    on<SupermarketAddProduct>((event, emit) {
+      _addProduct(event, emit);
     });
   }
 
@@ -31,6 +37,13 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
           status: SupermarketStatus.error,
           errorMessage: _convertToExceptionLog(e)));
     }
+  }
+
+  void _addProduct(
+      SupermarketAddProduct event, Emitter<SupermarketState> emit) {
+    final newSelectedProductsList = List<Product>.from(state.selectedProducts);
+    newSelectedProductsList.add(event.product);
+    emit(state.copyWith(selectedProducts: newSelectedProductsList));
   }
 
   String _convertToExceptionLog(Object exception) {
