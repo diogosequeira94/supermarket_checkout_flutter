@@ -3,27 +3,27 @@
     {
       "name": "A",
       "price": 50,
-      "imageId": "img001"
+      "imageId": "assets/donut.png"
     },
     {
       "name": "B",
       "price": 75,
-      "imageId": "img002"
+      "imageId": "assets/hamburger.png"
     },
     {
       "name": "C",
       "price": 25,
-      "imageId": "img003"
+      "imageId": "assets/pizza.png"
     },
     {
       "name": "D",
       "price": 150,
-      "imageId": "img004"
+      "imageId": "assets/ramen.png"
     },
     {
       "name": "E",
       "price": 200,
-      "imageId": "img005"
+      "imageId": "assets/salad.png"
     }
   ]
 }

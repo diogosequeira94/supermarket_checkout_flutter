@@ -13,8 +13,8 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   SupermarketBloc({required SupermarketRepository supermarketRepository})
       : _supermarketRepository = supermarketRepository,
         super(const SupermarketState(status: SupermarketStatus.initial)) {
-    on<SupermarketLoadStarted>((event, emit) {
-      _getProducts(emit);
+    on<SupermarketLoadStarted>((event, emit) async {
+      await _getProducts(emit);
     });
   }
 

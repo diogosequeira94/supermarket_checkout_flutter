@@ -28,6 +28,11 @@ flutter:
 
   assets:
     - lib/repository/data/mock-products.json
+    - assets/donut.png
+    - assets/hamburger.png
+    - assets/pizza.png
+    - assets/ramen.png
+    - assets/salad.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,6 +1,7 @@
 import 'package:fluro_checkout/bloc/supermarket_bloc.dart';
 import 'package:fluro_checkout/repository/api/supermarket_api_client.dart';
 import 'package:fluro_checkout/repository/repository.dart';
+import 'package:fluro_checkout/view/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,32 +18,18 @@ class MyApp extends StatelessWidget {
         SupermarketRepository(supermarketApiClient: SupermarketApiClient());
     return BlocProvider(
       create: (context) =>
-          SupermarketBloc(supermarketRepository: supermarketRepository),
+          SupermarketBloc(supermarketRepository: supermarketRepository)
+            ..add(
+              const SupermarketLoadStarted(),
+            ),
       child: MaterialApp(
         title: 'Fluro Supermarket',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
           useMaterial3: true,
         ),
-        home: const MyHomePage(),
+        home: const HomePage(),
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Home'),
-      ),
-      body: const Center(
-        child: Text('Fluro Supermarket'),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
