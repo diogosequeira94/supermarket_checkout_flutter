@@ -123,6 +123,8 @@ class SelectedProductWidget extends StatelessWidget {
         return 'When shopping for this item you get a special price when buying an X amount, enjoy!';
       case SharedStrings.buyNGetFree:
         return 'When shopping for this item you get a special offer when buying an X amount, enjoy!';
+      case SharedStrings.mealDealPromotion:
+        return 'Some items can be combined and you get a meal deal, enjoy!';
       default:
         return '';
     }
