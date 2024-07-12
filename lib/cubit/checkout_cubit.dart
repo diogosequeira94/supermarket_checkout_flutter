@@ -97,41 +97,44 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       Map<String, int> itemCounts,
       List<SelectedProduct> appliedPromotions) {
     for (MealDealPromotion promotion in mealDealPromotions) {
-      String productIdD = promotion.productIds[0];
-      String productIdE = promotion.productIds[1];
+      final firstProductId = promotion.productIds[0];
+      final secondProductId = promotion.productIds[1];
 
-      if (itemCounts.containsKey(productIdD) &&
-          itemCounts.containsKey(productIdE)) {
-        int countD = itemCounts[productIdD]!;
-        int countE = itemCounts[productIdE]!;
-        int unitPriceD =
-            selectedProducts.firstWhere((p) => p.name == productIdD).price;
-        int unitPriceE =
-            selectedProducts.firstWhere((p) => p.name == productIdE).price;
+      if (itemCounts.containsKey(firstProductId) &&
+          itemCounts.containsKey(secondProductId)) {
+        final countFirstProduct = itemCounts[firstProductId]!;
+        final countSecondProduct = itemCounts[secondProductId]!;
+        final unitPriceFirstProduct =
+            selectedProducts.firstWhere((p) => p.name == firstProductId).price;
+        final unitPriceSecondProduct =
+            selectedProducts.firstWhere((p) => p.name == secondProductId).price;
 
         // Calculate the remaining items
-        int setsOfItems = (countD < countE) ? countD : countE;
-        int remainingItemsD = countD - setsOfItems;
-        int remainingItemsE = countE - setsOfItems;
+        final setsOfItems = (countFirstProduct < countSecondProduct)
+            ? countFirstProduct
+            : countSecondProduct;
+        final remainingFirstProducts = countFirstProduct - setsOfItems;
+        final remainingSecondProducts = countSecondProduct - setsOfItems;
 
         // Apply the meal deal promotion using the extension method
-        int promotionPrice = promotion.calculatePrice(
-          itemCountFirstProduct: countD,
-          itemCountSecondProduct: countE,
-          priceFirstProduct: unitPriceD,
-          priceSecondProduct: unitPriceE,
+        final promotionPrice = promotion.calculatePrice(
+          itemCountFirstProduct: countFirstProduct,
+          itemCountSecondProduct: countSecondProduct,
+          priceFirstProduct: unitPriceFirstProduct,
+          priceSecondProduct: unitPriceSecondProduct,
         );
 
         appliedPromotions.add(SelectedProduct(
-          name: '${productIdD} + ${productIdE}',
-          oldPrice: (unitPriceD + unitPriceE) * setsOfItems,
+          name: '${firstProductId} + ${secondProductId}',
+          oldPrice:
+              (unitPriceFirstProduct + unitPriceSecondProduct) * setsOfItems,
           currentPrice: promotionPrice,
           promotionApplied: SharedStrings.mealDealPromotion,
         ));
 
         // Remove the counts that have been applied to meal deal promotion
-        itemCounts[productIdD] = remainingItemsD;
-        itemCounts[productIdE] = remainingItemsE;
+        itemCounts[firstProductId] = remainingFirstProducts;
+        itemCounts[secondProductId] = remainingSecondProducts;
       }
     }
   }
