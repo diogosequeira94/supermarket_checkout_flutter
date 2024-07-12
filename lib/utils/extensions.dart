@@ -34,15 +34,22 @@ extension BuyNGetFreeExtension on BuyNGetFreePromotion {
 /// Used to calculate the price for a meal deal promotion
 /// (e.g: buy D and E for £3).
 extension MealDealPromotionExtension on MealDealPromotion {
-  int calculatePrice(int countD, int countE, int unitPriceD, int unitPriceE) {
+  int calculatePrice({
+    required int itemCountFirstProduct,
+    required int itemCountSecondProduct,
+    required int priceFirstProduct,
+    required int priceSecondProduct,
+  }) {
     // Calculate the number of sets of the meal deal
-    final setsOfItems = (countD < countE) ? countD : countE;
+    final setsOfItems = (itemCountFirstProduct < itemCountSecondProduct)
+        ? itemCountFirstProduct
+        : itemCountSecondProduct;
     // Remaining items that do not belong to a set
-    final remainingItemsD = countD - setsOfItems;
-    final remainingItemsE = countE - setsOfItems;
+    final remainingFirstProducts = itemCountFirstProduct - setsOfItems;
+    final remainingSecondProducts = itemCountSecondProduct - setsOfItems;
     // Total price for the items including the promotion
     return setsOfItems * dealPrice +
-        remainingItemsD * unitPriceD +
-        remainingItemsE * unitPriceE;
+        remainingFirstProducts * priceFirstProduct +
+        remainingSecondProducts * priceSecondProduct;
   }
 }
