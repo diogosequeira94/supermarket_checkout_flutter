@@ -9,16 +9,20 @@ part 'checkout_state.dart';
 class CheckoutCubit extends Cubit<CheckoutState> {
   CheckoutCubit() : super(CheckoutState.initial());
 
-  void updateCheckout(List<Product> selectedProducts, SpecialPrices specialPrices) {
-    List<SelectedProduct> selectedProductsWithAppliedPromotions = _calculatePromotions(selectedProducts, specialPrices);
+  void updateCheckout(
+      List<Product> selectedProducts, SpecialPrices specialPrices) {
+    List<SelectedProduct> selectedProductsWithAppliedPromotions =
+        _calculatePromotions(selectedProducts, specialPrices);
     int totalAmount = _calculateTotal(selectedProductsWithAppliedPromotions);
     emit(CheckoutState(
-      selectedProductsWithAppliedPromotions: selectedProductsWithAppliedPromotions,
+      selectedProductsWithAppliedPromotions:
+          selectedProductsWithAppliedPromotions,
       totalAmount: totalAmount,
     ));
   }
 
-  List<SelectedProduct> _calculatePromotions(List<Product> selectedProducts, SpecialPrices specialPrices) {
+  List<SelectedProduct> _calculatePromotions(
+      List<Product> selectedProducts, SpecialPrices specialPrices) {
     Map<String, int> itemCounts = {};
 
     for (final product in selectedProducts) {
@@ -42,7 +46,8 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     List<SelectedProduct> appliedPromotions = [];
     int remainingCount = count;
 
-    for (MultiPricedPromotion promotion in specialPrices.multiPricedPromotions ?? []) {
+    for (MultiPricedPromotion promotion
+        in specialPrices.multiPricedPromotions ?? []) {
       if (promotion.productId == item) {
         int promotionPrice = promotion.calculatePrice(count, unitPrice);
 
@@ -71,7 +76,8 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   }
 
   int _calculateTotal(List<SelectedProduct> appliedPromotions) {
-    return appliedPromotions.fold(0, (total, promo) => total + promo.currentPrice);
+    return appliedPromotions.fold(
+        0, (total, promo) => total + promo.currentPrice);
   }
 }
 
@@ -83,5 +89,26 @@ extension on MultiPricedPromotion {
     final setsOfItems = itemCount ~/ quantity;
     final remainingLeftovers = itemCount % quantity;
     return setsOfItems * specialPrice + remainingLeftovers * unitPrice;
+  }
+}
+
+// ToDo: Move to separate file
+/// Used to calculate an offer in case someone buys a specific amount
+/// (e.g: buy 2 get one free).
+extension on BuyNGetFreePromotion {
+  int calculatePrice(int itemCount, int unitPrice) {
+    /// If the number of items select was more the amountNeeded to get an offer
+    if (itemCount >= amountNeeded) {
+      // Number of sets that qualify for the promotion
+      final setsOfItems = itemCount ~/ (amountNeeded + 1);
+      // Remaining items that do not belong to a set
+      final remainingItems = itemCount % (amountNeeded + 1);
+      // Total price for the items including the promotion
+      return setsOfItems * amountNeeded * unitPrice +
+          remainingItems * unitPrice;
+    } else {
+      // If there are not enough items to qualify for the promotion, pay the unit price
+      return itemCount * unitPrice;
+    }
   }
 }
