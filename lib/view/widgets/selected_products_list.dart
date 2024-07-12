@@ -1,7 +1,7 @@
 import 'package:fluro_checkout/bloc/supermarket_bloc.dart';
 import 'package:fluro_checkout/view/widgets/selected_product_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:fluro_checkout/repository/models/product.dart';
+import 'package:fluro_checkout/repository/models/product/product.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectedProductsList extends StatelessWidget {

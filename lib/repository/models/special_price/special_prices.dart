@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:fluro_checkout/repository/models/special_prices/buy_n_get_free_promotion.dart';
-import 'package:fluro_checkout/repository/models/special_prices/meal_deal_promotion.dart';
-import 'package:fluro_checkout/repository/models/special_prices/multi_priced_promotion.dart';
+import 'package:fluro_checkout/repository/models/special_price/buy_n_get_free_promotion.dart';
+import 'package:fluro_checkout/repository/models/special_price/meal_deal_promotion.dart';
+import 'package:fluro_checkout/repository/models/special_price/multi_priced_promotion.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'special_prices.g.dart';

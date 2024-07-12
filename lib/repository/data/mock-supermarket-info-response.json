@@ -1,0 +1,50 @@
+{
+  "products": [
+    {
+      "name": "A",
+      "price": 50,
+      "imageId": "assets/donut.png"
+    },
+    {
+      "name": "B",
+      "price": 75,
+      "imageId": "assets/hamburger.png"
+    },
+    {
+      "name": "C",
+      "price": 25,
+      "imageId": "assets/pizza.png"
+    },
+    {
+      "name": "D",
+      "price": 150,
+      "imageId": "assets/ramen.png"
+    },
+    {
+      "name": "E",
+      "price": 200,
+      "imageId": "assets/salad.png"
+    }
+  ],
+  "specialPrices": {
+    "multiPriced": [
+      {
+        "productId": "B",
+        "quantity": 2,
+        "specialPrice": 125
+      }
+    ],
+    "buyNGetFree": [
+      {
+        "productId": "C",
+        "amountNeeded": 3
+      }
+    ],
+    "mealDeal": [
+      {
+        "productIds": ["D", "E"],
+        "dealPrice": 300
+      }
+    ]
+  }
+}
