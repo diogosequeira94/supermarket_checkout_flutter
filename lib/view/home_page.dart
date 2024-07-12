@@ -1,11 +1,7 @@
 import 'package:fluro_checkout/bloc/supermarket_bloc.dart';
-import 'package:fluro_checkout/cubit/checkout_cubit.dart';
-import 'package:fluro_checkout/view/checkout_page.dart';
 import 'package:fluro_checkout/view/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../repository/repository.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -88,7 +84,7 @@ class HomePage extends StatelessWidget {
                                 SizedBox(width: 4.0),
                                 Flexible(
                                   child: Text(
-                                    'Promotions are calculated on checkout',
+                                    'Promotions are calculated automatically',
                                     style: TextStyle(color: Colors.black),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -98,13 +94,6 @@ class HomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _handleCheckoutBtnAction(
-                              context, state.selectedProducts);
-                        },
-                        child: const Text('Checkout'),
                       ),
                     ],
                   ),
@@ -118,39 +107,6 @@ class HomePage extends StatelessWidget {
           }
           return const SizedBox.shrink();
         },
-      ),
-    );
-  }
-
-  void _handleCheckoutBtnAction(
-      BuildContext context, List<Product> selectedProducts) {
-    if (selectedProducts.isEmpty) {
-      _showEmptyCartSnackBar(context);
-    } else {
-      _navigateToCheckout(context, selectedProducts);
-    }
-  }
-
-  void _showEmptyCartSnackBar(BuildContext context) {
-    const snackBar = SnackBar(
-      content: Text('Please select some products first :)'),
-      duration: Duration(seconds: 2),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void _navigateToCheckout(
-      BuildContext context, List<Product> selectedProducts) {
-    final supermarketRepository = context.read<SupermarketRepository>();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (_) =>
-              CheckoutCubit(supermarketRepository: supermarketRepository)
-                ..getCurrentPromotions(selectedProducts),
-          child: const CheckoutPage(),
-        ),
       ),
     );
   }

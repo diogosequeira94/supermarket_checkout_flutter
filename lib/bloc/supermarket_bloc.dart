@@ -9,8 +9,9 @@ part 'supermarket_event.dart';
 part 'supermarket_state.dart';
 
 class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
-  SupermarketBloc({required SupermarketRepository supermarketRepository})
-      : _supermarketRepository = supermarketRepository,
+  SupermarketBloc({
+    required SupermarketRepository supermarketRepository,
+  })  : _supermarketRepository = supermarketRepository,
         super(const SupermarketState(
             status: SupermarketStatus.initial,
             selectedProducts: [],
@@ -24,6 +25,8 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   }
 
   final SupermarketRepository _supermarketRepository;
+
+  late List<Product> _products;
   late SpecialPrices _specialPrices;
 
   Future<void> _preloadSupermarketInfo(Emitter<SupermarketState> emit) async {
@@ -32,11 +35,13 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
 
       final supermarketInfo =
           await _supermarketRepository.preloadSupermarketInfo();
+
+      _products = supermarketInfo.products;
       _specialPrices = supermarketInfo.specialPrices;
 
       emit(state.copyWith(
         status: SupermarketStatus.loaded,
-        products: supermarketInfo.products,
+        products: _products,
       ));
     } on Object catch (e) {
       emit(state.copyWith(
@@ -45,6 +50,8 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
     }
   }
 
+  /// Used to perform operations on [selectedProducts]
+  /// Can either add (scan) or remove products from the list
   void _performProductListOperation(SupermarketProductOperationPressed event,
       Emitter<SupermarketState> emit) {
     final selectedProductsList = List<Product>.from(state.selectedProducts);
