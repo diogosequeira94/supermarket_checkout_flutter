@@ -1,4 +1,5 @@
 import 'package:fluro_checkout/model/selected_product.dart';
+import 'package:fluro_checkout/utils/shared_strings.dart';
 import 'package:flutter/material.dart';
 
 class SelectedProductWidget extends StatelessWidget {
@@ -57,7 +58,8 @@ class SelectedProductWidget extends StatelessWidget {
                         Icons.info,
                         color: Colors.blueAccent,
                       ),
-                      onPressed: () => _openPromotionInfoDialog(context),
+                      onPressed: () => _openPromotionInfoDialog(
+                          context, product.promotionApplied),
                     ),
                   IconButton(
                     icon: const Icon(
@@ -72,15 +74,15 @@ class SelectedProductWidget extends StatelessWidget {
     );
   }
 
-  void _openPromotionInfoDialog(BuildContext context) {
+  void _openPromotionInfoDialog(BuildContext context, String promotionApplied) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Promotion Information'),
-          content: const Text(
-            'Multi-priced Promotion: Buy 3 for £1.30\n'
-            'This information helps users understand the promotions they are getting.',
+          title: const Text('Special Price Added'),
+          content: Text(
+            '$promotionApplied\n\n'
+            '${_getPromotionDescription(promotionApplied)}',
           ),
           actions: <Widget>[
             TextButton(
@@ -93,5 +95,16 @@ class SelectedProductWidget extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _getPromotionDescription(String promotionApplied) {
+    switch (promotionApplied) {
+      case SharedStrings.multiPricedPromotion:
+        return 'When shopping for this item you get a special price when buying an X amount, enjoy!';
+      case SharedStrings.buyNGetFree:
+        return 'When shopping for this item you get a special offer when buying an X amount, enjoy!';
+      default:
+        return '';
+    }
   }
 }

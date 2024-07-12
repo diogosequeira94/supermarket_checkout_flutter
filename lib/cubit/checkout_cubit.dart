@@ -1,4 +1,5 @@
 import 'package:fluro_checkout/model/selected_product.dart';
+import 'package:fluro_checkout/utils/shared_strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -34,42 +35,46 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     for (final item in itemCounts.keys) {
       int count = itemCounts[item]!;
       int unitPrice = selectedProducts.firstWhere((p) => p.name == item).price;
-      appliedPromotions.addAll(
-          _applyMultiPricedPromotions(item, count, unitPrice, specialPrices));
-    }
 
-    return appliedPromotions;
-  }
+      // Apply multi-priced promotions
+      for (MultiPricedPromotion promotion
+          in specialPrices.multiPricedPromotions ?? []) {
+        if (promotion.productId == item) {
+          int promotionPrice = promotion.calculatePrice(count, unitPrice);
+          appliedPromotions.add(SelectedProduct(
+            name: item,
+            oldPrice: unitPrice * count,
+            currentPrice: promotionPrice,
+            promotionApplied: SharedStrings.multiPricedPromotion,
+          ));
+          count = 0;
+        }
+      }
 
-  List<SelectedProduct> _applyMultiPricedPromotions(
-      String item, int count, int unitPrice, SpecialPrices specialPrices) {
-    List<SelectedProduct> appliedPromotions = [];
-    int remainingCount = count;
+      // Apply buy N get one free promotions
+      for (BuyNGetFreePromotion promotion
+          in specialPrices.buyNGetFreePromotions ?? []) {
+        if (promotion.productId == item && count > 0) {
+          int promotionPrice = promotion.calculatePrice(count, unitPrice);
+          appliedPromotions.add(SelectedProduct(
+            name: item,
+            oldPrice: unitPrice * count,
+            currentPrice: promotionPrice,
+            promotionApplied: SharedStrings.buyNGetFree,
+          ));
+          count = 0;
+        }
+      }
 
-    for (MultiPricedPromotion promotion
-        in specialPrices.multiPricedPromotions ?? []) {
-      if (promotion.productId == item) {
-        int promotionPrice = promotion.calculatePrice(count, unitPrice);
-
+      // For the remaining items without promotion
+      if (count > 0) {
         appliedPromotions.add(SelectedProduct(
           name: item,
-          oldPrice: unitPrice * count, // Original total price without promotion
-          currentPrice: promotionPrice,
-          promotionApplied: 'Multi-priced Promotion',
+          oldPrice: null,
+          currentPrice: unitPrice * count,
+          promotionApplied: '',
         ));
-
-        remainingCount -= count;
       }
-    }
-
-    // For the remaining items without promotion
-    for (int i = 0; i < remainingCount; i++) {
-      appliedPromotions.add(SelectedProduct(
-        name: item,
-        oldPrice: null,
-        currentPrice: unitPrice,
-        promotionApplied: '',
-      ));
     }
 
     return appliedPromotions;
@@ -97,7 +102,6 @@ extension on MultiPricedPromotion {
 /// (e.g: buy 2 get one free).
 extension on BuyNGetFreePromotion {
   int calculatePrice(int itemCount, int unitPrice) {
-    /// If the number of items select was more the amountNeeded to get an offer
     if (itemCount >= amountNeeded) {
       // Number of sets that qualify for the promotion
       final setsOfItems = itemCount ~/ (amountNeeded + 1);
