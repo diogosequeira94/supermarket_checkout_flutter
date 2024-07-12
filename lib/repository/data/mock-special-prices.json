@@ -1,0 +1,21 @@
+{
+  "multiPriced": [
+    {
+      "productId": "B",
+      "quantity": 2,
+      "specialPrice": 125
+    }
+  ],
+  "buyNGetFree": [
+    {
+      "productId": "C",
+      "amountNeeded": 3
+    }
+  ],
+  "mealDeal": [
+    {
+      "productIds": ["D", "E"],
+      "dealPrice": 300
+    }
+  ]
+}
