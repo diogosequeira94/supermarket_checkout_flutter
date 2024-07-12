@@ -1,7 +1,5 @@
-import 'package:fluro_checkout/bloc/supermarket_bloc.dart';
-import 'package:fluro_checkout/view/home_page.dart';
+import 'package:fluro_checkout/view/intro_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// This is not a native splashScreen
 /// Added for demonstration purposes
@@ -20,13 +18,11 @@ class _SupermarketSplashScreenState extends State<SupermarketSplashScreen> {
   }
 
   void _navigateToNextPage() {
-    final supermarketBloc = context.read<SupermarketBloc>();
-    supermarketBloc.add(const SupermarketLoadStarted());
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            const HomePage(),
+            const IntroPage(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = 0.0;
           const end = 1.0;
