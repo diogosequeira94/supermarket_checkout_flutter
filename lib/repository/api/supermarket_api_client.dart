@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/services.dart';
 
 import '../errors/errors.dart';
@@ -24,7 +25,8 @@ class SupermarketApiClient {
         for (final product in productsJson) Product.fromJson(product),
       ];
     } on Object catch (_) {
-      throw _mapStatusCodeToException(400);
+      final exceptionCode = _generateRandomException();
+      throw _mapStatusCodeToException(exceptionCode);
     }
   }
 
@@ -43,7 +45,8 @@ class SupermarketApiClient {
       await Future.delayed(const Duration(seconds: 1));
       return SpecialPrices.fromJson(specialPricesJson);
     } on Object catch (_) {
-      throw _mapStatusCodeToException(400);
+      final exceptionCode = _generateRandomException();
+      throw _mapStatusCodeToException(exceptionCode);
     }
   }
 
@@ -62,7 +65,8 @@ class SupermarketApiClient {
       await Future.delayed(const Duration(seconds: 1));
       return SupermarketInfoResponse.fromJson(supermarketInfoJson);
     } on Object catch (_) {
-      throw _mapStatusCodeToException(400);
+      final exceptionCode = _generateRandomException();
+      throw _mapStatusCodeToException(exceptionCode);
     }
   }
 
@@ -76,5 +80,13 @@ class SupermarketApiClient {
       default:
         return SupermarketUnknownErrorException(statusCode: statusCode);
     }
+  }
+
+  // A mock exception
+  int _generateRandomException() {
+    final random = Random();
+    final numbers = [401, 500, 503];
+    final randomIndex = random.nextInt(numbers.length);
+    return numbers[randomIndex];
   }
 }

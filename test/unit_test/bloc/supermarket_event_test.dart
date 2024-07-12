@@ -5,6 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const product = Product(name: 'A', price: 20, imageId: 'mockImage');
   group('SupermarketEvent', () {
+    group('SupermarketLoadStarted', () {
+      test('props', () {
+        expect(
+          const SupermarketLoadStarted().props,
+          [],
+        );
+      });
+    });
     group('SupermarketSelectProductPressed', () {
       test('props', () {
         expect(

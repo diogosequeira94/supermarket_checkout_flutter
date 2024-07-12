@@ -1,12 +1,10 @@
-import 'package:fluro_checkout/repository/models/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fluro_checkout/utils/extensions.dart';
 
+import '../unit_test_helpers.dart';
+
 void main() {
   group('MultiPricedPromotion', () {
-    const multiPricePromotion =
-        MultiPricedPromotion(productId: 'A', quantity: 3, specialPrice: 120);
-
     test('Should apply a promotion when buying 3 items', () {
       expect(multiPricePromotion.calculatePrice(3, 50), 120);
     });
@@ -32,9 +30,6 @@ void main() {
   });
 
   group('BuyNGetFree', () {
-    const buyNGetFreePromotion =
-        BuyNGetFreePromotion(productId: 'A', amountNeeded: 4);
-
     test('Should apply a promotion after amountNeeded is met', () {
       expect(buyNGetFreePromotion.calculatePrice(5, 50), 200);
     });

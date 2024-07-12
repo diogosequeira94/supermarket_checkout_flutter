@@ -7,6 +7,9 @@ import 'package:mocktail/mocktail.dart';
 
 class MockSupermarketRepository extends Mock implements SupermarketRepository {}
 
+class MockCheckoutCubit extends MockCubit<CheckoutState>
+    implements CheckoutCubit {}
+
 void main() {
   late SupermarketRepository supermarketRepository;
   late SupermarketBloc supermarketBloc;
@@ -14,7 +17,7 @@ void main() {
 
   setUp(() {
     supermarketRepository = MockSupermarketRepository();
-    checkoutCubit = CheckoutCubit();
+    checkoutCubit = MockCheckoutCubit();
     supermarketBloc = SupermarketBloc(
       supermarketRepository: supermarketRepository,
       checkoutCubit: checkoutCubit,
@@ -23,7 +26,6 @@ void main() {
 
   tearDown(() {
     supermarketBloc.close();
-    checkoutCubit.close();
   });
 
   group('SupermarketBloc', () {
@@ -68,7 +70,84 @@ void main() {
       );
 
       blocTest<SupermarketBloc, SupermarketState>(
-        'should add product to list when [SupermarketSelectProductPressed] is added',
+        'emits [SupermarketStatus.loading] and [SupermarketStatus.error] when there is a SupermarketUnauthorizedException',
+        setUp: () {
+          when(() => supermarketRepository.preloadSupermarketInfo()).thenAnswer(
+              (_) async => Future.error(SupermarketUnauthorizedException()));
+        },
+        build: () => supermarketBloc,
+        act: (bloc) => bloc.add(const SupermarketLoadStarted()),
+        expect: () => [
+          const SupermarketState(
+            status: SupermarketStatus.loading,
+            selectedProducts: [],
+          ),
+          const SupermarketState(
+            status: SupermarketStatus.error,
+            selectedProducts: [],
+            errorMessage: 'Ooops, unauthorized exception occurred!',
+          ),
+        ],
+        verify: (_) {
+          verify(() => supermarketRepository.preloadSupermarketInfo())
+              .called(1);
+        },
+      );
+
+      blocTest<SupermarketBloc, SupermarketState>(
+        'emits [SupermarketStatus.loading] and [SupermarketStatus.error] when there is a SupermarketServiceNotAvailableException',
+        setUp: () {
+          when(() => supermarketRepository.preloadSupermarketInfo()).thenAnswer(
+              (_) async => Future.error(
+                  SupermarketServiceNotAvailableException(statusCode: 503)));
+        },
+        build: () => supermarketBloc,
+        act: (bloc) => bloc.add(const SupermarketLoadStarted()),
+        expect: () => [
+          const SupermarketState(
+            status: SupermarketStatus.loading,
+            selectedProducts: [],
+          ),
+          const SupermarketState(
+            status: SupermarketStatus.error,
+            selectedProducts: [],
+            errorMessage: 'Ooops, service seems to be down!',
+          ),
+        ],
+        verify: (_) {
+          verify(() => supermarketRepository.preloadSupermarketInfo())
+              .called(1);
+        },
+      );
+
+      blocTest<SupermarketBloc, SupermarketState>(
+        'emits [SupermarketStatus.loading] and [SupermarketStatus.error] when there is an SupermarketUnauthorizedException',
+        setUp: () {
+          when(() => supermarketRepository.preloadSupermarketInfo()).thenAnswer(
+              (_) async => Future.error(
+                  SupermarketUnknownErrorException(statusCode: 600)));
+        },
+        build: () => supermarketBloc,
+        act: (bloc) => bloc.add(const SupermarketLoadStarted()),
+        expect: () => [
+          const SupermarketState(
+            status: SupermarketStatus.loading,
+            selectedProducts: [],
+          ),
+          const SupermarketState(
+            status: SupermarketStatus.error,
+            selectedProducts: [],
+            errorMessage: 'Ooops, something went wrong, please try again!',
+          ),
+        ],
+        verify: (_) {
+          verify(() => supermarketRepository.preloadSupermarketInfo())
+              .called(1);
+        },
+      );
+
+      blocTest<SupermarketBloc, SupermarketState>(
+        'should add product to list when [SupermarketSelectProductPressed] is added and delegates to CheckoutCubit',
         setUp: () {
           when(() => supermarketRepository.preloadSupermarketInfo())
               .thenAnswer((_) async => preloadInformation);
@@ -98,11 +177,13 @@ void main() {
         verify: (_) {
           verify(() => supermarketRepository.preloadSupermarketInfo())
               .called(1);
+          verify(() => checkoutCubit.updateCheckout(
+              [preloadInformation.products[0]], specialPrices)).called(1);
         },
       );
 
       blocTest<SupermarketBloc, SupermarketState>(
-        'should remove product to list when [SupermarketProductRemoveSelectedPressed] is added',
+        'should remove product to list when [SupermarketProductRemoveSelectedPressed] is added and delegates to CheckoutCubit',
         setUp: () {
           when(() => supermarketRepository.preloadSupermarketInfo())
               .thenAnswer((_) async => preloadInformation);
@@ -138,6 +219,8 @@ void main() {
         ],
         verify: (_) {
           verify(() => supermarketRepository.preloadSupermarketInfo())
+              .called(1);
+          verify(() => checkoutCubit.updateCheckout([], specialPrices))
               .called(1);
         },
       );
