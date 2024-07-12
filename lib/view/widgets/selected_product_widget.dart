@@ -1,5 +1,6 @@
 import 'package:fluro_checkout/model/selected_product.dart';
 import 'package:fluro_checkout/utils/shared_strings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SelectedProductWidget extends StatelessWidget {
@@ -33,6 +34,7 @@ class SelectedProductWidget extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14.0,
                         decoration: TextDecoration.lineThrough,
+                        color: Colors.grey,
                       ),
                     ),
                   Text('${product.currentPrice.toString()}p'),
@@ -42,9 +44,27 @@ class SelectedProductWidget extends StatelessWidget {
           ],
         ),
         subtitle: isPromotionApplied
-            ? const Padding(
-                padding: EdgeInsets.only(top: 4.0),
-                child: Text('Promotion Applied!'),
+            ? Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(6.0)),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 2.5, horizontal: 8.0),
+                      child: Text(
+                        'Promotion',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               )
             : const SizedBox.shrink(),
         trailing: isCheckout
@@ -63,7 +83,7 @@ class SelectedProductWidget extends StatelessWidget {
                     ),
                   IconButton(
                     icon: const Icon(
-                      Icons.delete_outline,
+                      Icons.delete,
                       color: Colors.red,
                     ),
                     onPressed: onTap,
