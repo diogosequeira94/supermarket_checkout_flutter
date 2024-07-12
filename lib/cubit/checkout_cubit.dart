@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../repository/models/models.dart';
+import '../utils/extensions.dart';
 
 part 'checkout_state.dart';
 
@@ -83,36 +84,5 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   int _calculateTotal(List<SelectedProduct> appliedPromotions) {
     return appliedPromotions.fold(
         0, (total, promo) => total + promo.currentPrice);
-  }
-}
-
-// ToDo: Move to separate file
-/// Used to calculate the price for a product based on a multi-priced promotion
-/// (e.g: buy 3 for a special price).
-extension on MultiPricedPromotion {
-  int calculatePrice(int itemCount, int unitPrice) {
-    final setsOfItems = itemCount ~/ quantity;
-    final remainingLeftovers = itemCount % quantity;
-    return setsOfItems * specialPrice + remainingLeftovers * unitPrice;
-  }
-}
-
-// ToDo: Move to separate file
-/// Used to calculate an offer in case someone buys a specific amount
-/// (e.g: buy 2 get one free).
-extension on BuyNGetFreePromotion {
-  int calculatePrice(int itemCount, int unitPrice) {
-    if (itemCount >= amountNeeded) {
-      // Number of sets that qualify for the promotion
-      final setsOfItems = itemCount ~/ (amountNeeded + 1);
-      // Remaining items that do not belong to a set
-      final remainingItems = itemCount % (amountNeeded + 1);
-      // Total price for the items including the promotion
-      return setsOfItems * amountNeeded * unitPrice +
-          remainingItems * unitPrice;
-    } else {
-      // If there are not enough items to qualify for the promotion, pay the unit price
-      return itemCount * unitPrice;
-    }
   }
 }
