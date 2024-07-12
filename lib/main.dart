@@ -1,4 +1,5 @@
 import 'package:fluro_checkout/bloc/supermarket_bloc.dart';
+import 'package:fluro_checkout/cubit/checkout_cubit.dart';
 import 'package:fluro_checkout/repository/api/supermarket_api_client.dart';
 import 'package:fluro_checkout/repository/repository.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,18 @@ class MyApp extends StatelessWidget {
     return RepositoryProvider(
       create: (context) => SupermarketRepository(
           supermarketApiClient: const SupermarketApiClient()),
-      child: BlocProvider(
-        create: (context) => SupermarketBloc(
-          supermarketRepository: context.read<SupermarketRepository>(),
-        ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => CheckoutCubit(),
+          ),
+          BlocProvider(
+            create: (context) => SupermarketBloc(
+              supermarketRepository: context.read<SupermarketRepository>(),
+              checkoutCubit: context.read<CheckoutCubit>(),
+            ),
+          ),
+        ],
         child: MaterialApp(
           title: 'Fluro Supermarket',
           theme: ThemeData(

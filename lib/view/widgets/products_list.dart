@@ -25,8 +25,7 @@ class ProductsList extends StatelessWidget {
         final product = products[index];
         return ProductItem(
           onTap: () => supermarketBloc.add(
-            SupermarketProductOperationPressed(
-              operation: ProductOperation.add,
+            SupermarketSelectProductPressed(
               product: product,
             ),
           ),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fluro_checkout/cubit/checkout_cubit.dart';
 
 import '../repository/repository.dart';
 
@@ -11,7 +12,9 @@ part 'supermarket_state.dart';
 class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   SupermarketBloc({
     required SupermarketRepository supermarketRepository,
+    required CheckoutCubit checkoutCubit,
   })  : _supermarketRepository = supermarketRepository,
+        _checkoutCubit = checkoutCubit,
         super(const SupermarketState(
             status: SupermarketStatus.initial,
             selectedProducts: [],
@@ -19,12 +22,16 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
     on<SupermarketLoadStarted>((event, emit) async {
       await _preloadSupermarketInfo(emit);
     });
-    on<SupermarketProductOperationPressed>((event, emit) {
+    on<SupermarketSelectProductPressed>((event, emit) {
       _performProductListOperation(event, emit);
+    });
+    on<SupermarketProductRemoveSelectedPressed>((event, emit) {
+      _removeSelectedProduct(event, emit);
     });
   }
 
   final SupermarketRepository _supermarketRepository;
+  final CheckoutCubit _checkoutCubit;
 
   late List<Product> _products;
   late SpecialPrices _specialPrices;
@@ -52,13 +59,32 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
 
   /// Used to perform operations on [selectedProducts]
   /// Can either add (scan) or remove products from the list
-  void _performProductListOperation(SupermarketProductOperationPressed event,
+  /// Delegates to CheckoutCubit
+  void _performProductListOperation(
+      SupermarketSelectProductPressed event, Emitter<SupermarketState> emit) {
+    final selectedProductsList = List<Product>.from(state.selectedProducts);
+
+    selectedProductsList.add(event.product);
+
+    _checkoutCubit.updateCheckout(selectedProductsList, _specialPrices);
+
+    final updatedAmount = _updateTotalAmount(selectedProductsList);
+    emit(state.copyWith(
+        selectedProducts: selectedProductsList, totalAmount: updatedAmount));
+  }
+
+  void _removeSelectedProduct(SupermarketProductRemoveSelectedPressed event,
       Emitter<SupermarketState> emit) {
     final selectedProductsList = List<Product>.from(state.selectedProducts);
 
-    event.operation == ProductOperation.add
-        ? selectedProductsList.add(event.product)
-        : selectedProductsList.remove(event.product);
+    // Remove only one instance of the product
+    final index = selectedProductsList
+        .indexWhere((product) => product.name == event.selectedProductName);
+    if (index != -1) {
+      selectedProductsList.removeAt(index);
+    }
+
+    _checkoutCubit.updateCheckout(selectedProductsList, _specialPrices);
 
     final updatedAmount = _updateTotalAmount(selectedProductsList);
     emit(state.copyWith(

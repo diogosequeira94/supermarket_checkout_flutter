@@ -1,4 +1,5 @@
 import 'package:fluro_checkout/bloc/supermarket_bloc.dart';
+import 'package:fluro_checkout/cubit/checkout_cubit.dart';
 import 'package:fluro_checkout/view/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,10 +52,7 @@ class HomePage extends StatelessWidget {
                           child: Text(
                               'Selected products: ${state.selectedProducts.length}'),
                         ),
-                        if (state.selectedProducts.isNotEmpty)
-                          SelectedProductsList(
-                              products: state.selectedProducts),
-                        const SizedBox(height: 100),
+                        _SelectedProductsList(),
                       ],
                     ),
                   ),
@@ -69,10 +67,7 @@ class HomePage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Total: ${state.totalAmount.toString()}p',
-                              style: const TextStyle(fontSize: 18.0),
-                            ),
+                            _TotalPriceTextWidget(),
                             const SizedBox(height: 4.0),
                             const Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,6 +103,36 @@ class HomePage extends StatelessWidget {
           return const SizedBox.shrink();
         },
       ),
+    );
+  }
+}
+
+class _TotalPriceTextWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CheckoutCubit, CheckoutState>(
+      builder: (context, state) {
+        return Text(
+          'Total: ${state.totalAmount.toString()}p',
+          style: const TextStyle(fontSize: 18.0),
+        );
+      },
+    );
+  }
+}
+
+class _SelectedProductsList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CheckoutCubit, CheckoutState>(
+      builder: (context, state) {
+        return Visibility(
+          visible: state.selectedProductsWithAppliedPromotions.isNotEmpty,
+          child: SelectedProductsList(
+            products: state.selectedProductsWithAppliedPromotions,
+          ),
+        );
+      },
     );
   }
 }
