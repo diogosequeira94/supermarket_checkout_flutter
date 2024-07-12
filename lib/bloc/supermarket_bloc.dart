@@ -76,8 +76,18 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
     final selectedProductsList = List<Product>.from(state.selectedProducts);
 
     // Remove only one instance of the product
-    final index = selectedProductsList
-        .indexWhere((product) => product.name == event.selectedProductName);
+    final index = selectedProductsList.indexWhere((product) {
+      final productName = product.name;
+      final selectedName = event.selectedProductName;
+
+      if (productName == 'D' || productName == 'E' && selectedName == 'D + E') {
+        /// Remove one D and one E
+        return true;
+      }
+
+      return productName == selectedName;
+    });
+
     if (index != -1) {
       selectedProductsList.removeAt(index);
     }

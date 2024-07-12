@@ -30,7 +30,6 @@ extension BuyNGetFreeExtension on BuyNGetFreePromotion {
   }
 }
 
-// ToDo: Move to separate file
 /// Used to calculate the price for a meal deal promotion
 /// (e.g: buy D and E for £3).
 extension MealDealPromotionExtension on MealDealPromotion {
@@ -51,5 +50,13 @@ extension MealDealPromotionExtension on MealDealPromotion {
     return setsOfItems * dealPrice +
         remainingFirstProducts * priceFirstProduct +
         remainingSecondProducts * priceSecondProduct;
+  }
+}
+
+/// Extension to check if null or empty
+/// Handy to know when to apply a promotion
+extension IterableExtensions<T> on Iterable<T>? {
+  bool get isNullOrEmpty {
+    return this == null || this!.isEmpty;
   }
 }
