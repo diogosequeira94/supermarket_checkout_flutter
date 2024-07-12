@@ -28,6 +28,8 @@ flutter:
 
   assets:
     - lib/repository/data/mock-products.json
+    - lib/repository/data/mock-special-prices.json
+    - lib/repository/data/mock-supermarket-info-response.json
     - assets/donut.png
     - assets/hamburger.png
     - assets/pizza.png

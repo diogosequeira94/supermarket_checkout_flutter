@@ -14,7 +14,7 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   Future<void> getCurrentPromotions(List<Product> checkoutProducts) async {
     try {
       emit(CheckoutLoadInProgress());
-      final promotions = await _supermarketRepository.getPromotions();
+      final promotions = await _supermarketRepository.getSpecialPrices();
 
       if (promotions != null) {
         /// Apply Promotions

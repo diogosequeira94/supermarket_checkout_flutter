@@ -28,16 +28,20 @@ class SupermarketApiClient {
     }
   }
 
-  /// Get Promotions
+  /// Get Special Prices
   ///
   /// Throws [SupermarketUnauthorizedException] if user is not authorized
   /// [SupermarketServiceNotAvailableException] if service runs into
   /// internal error or service is not available
   /// [SupermarketUnknownErrorException] if unknown error occurred
-  Future<Object> getPromotions() async {
-    /// ToDo: Think about Promotion object
+  Future<SpecialPrices> getSpecialPrices() async {
     try {
-      return '';
+      final response = await rootBundle
+          .loadString('lib/repository/data/mock-special-prices.json');
+      final specialPricesJson = json.decode(response);
+      // Simulates the request time
+      await Future.delayed(const Duration(seconds: 1));
+      return SpecialPrices.fromJson(specialPricesJson);
     } on Object catch (_) {
       throw _mapStatusCodeToException(400);
     }
@@ -49,10 +53,14 @@ class SupermarketApiClient {
   /// [SupermarketServiceNotAvailableException] if service runs into
   /// internal error or service is not available
   /// [SupermarketUnknownErrorException] if unknown error occurred
-  Future<Object> preloadSupermarketInfo() async {
-    /// ToDo: Returns response object with promotions and products
+  Future<SupermarketInfoResponse> preloadSupermarketInfo() async {
     try {
-      return '';
+      final response = await rootBundle.loadString(
+          'lib/repository/data/mock-supermarket-info-response.json');
+      final supermarketInfoJson = json.decode(response);
+      // Simulates the request time
+      await Future.delayed(const Duration(seconds: 1));
+      return SupermarketInfoResponse.fromJson(supermarketInfoJson);
     } on Object catch (_) {
       throw _mapStatusCodeToException(400);
     }

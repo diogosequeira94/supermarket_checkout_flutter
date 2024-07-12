@@ -16,7 +16,7 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
             selectedProducts: [],
             totalAmount: 0)) {
     on<SupermarketLoadStarted>((event, emit) async {
-      await _getProducts(emit);
+      await _preloadSupermarketInfo(emit);
     });
     on<SupermarketProductOperationPressed>((event, emit) {
       _performProductListOperation(event, emit);
@@ -24,14 +24,19 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   }
 
   final SupermarketRepository _supermarketRepository;
+  late SpecialPrices _specialPrices;
 
-  Future<void> _getProducts(Emitter<SupermarketState> emit) async {
+  Future<void> _preloadSupermarketInfo(Emitter<SupermarketState> emit) async {
     try {
       emit(state.copyWith(status: SupermarketStatus.loading));
-      final products = await _supermarketRepository.fetchProducts();
+
+      final supermarketInfo =
+          await _supermarketRepository.preloadSupermarketInfo();
+      _specialPrices = supermarketInfo.specialPrices;
+
       emit(state.copyWith(
         status: SupermarketStatus.loaded,
-        products: products,
+        products: supermarketInfo.products,
       ));
     } on Object catch (e) {
       emit(state.copyWith(
