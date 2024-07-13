@@ -102,9 +102,11 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         ElevatedButton(
+                          key: const Key('checkoutButton_key'),
                           onPressed: () {
                             if (state.selectedProducts.isEmpty) {
                               const snackBar = SnackBar(
+                                key: Key('checkoutButton_snackBar_key'),
                                 content: Text(
                                     'Please select some products first :)'),
                                 duration: Duration(seconds: 2),
@@ -124,6 +126,7 @@ class HomePage extends StatelessWidget {
               );
             } else if (status == SupermarketStatus.error) {
               return const Center(
+                key: Key('errorWidget_key'),
                 child: Text('Error!'),
               );
             }
@@ -139,6 +142,7 @@ class HomePage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          key: const Key('confirmationDialog_key'),
           title: const Text('Checkout & Pay'),
           content: const Text(
             'By checking out and paying you will finish your shopping.\n\n'
