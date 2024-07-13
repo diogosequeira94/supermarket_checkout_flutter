@@ -1,6 +1,6 @@
 part of 'supermarket_bloc.dart';
 
-abstract class SupermarketEvent extends Equatable {
+sealed class SupermarketEvent extends Equatable {
   const SupermarketEvent();
 }
 

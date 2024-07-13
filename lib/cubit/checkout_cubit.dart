@@ -15,7 +15,9 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       List<Product> selectedProducts, SpecialPrices specialPrices) {
     List<SelectedProduct> selectedProductsWithAppliedPromotions =
         _calculatePromotions(selectedProducts, specialPrices);
-    int totalAmount = _calculateTotal(selectedProductsWithAppliedPromotions);
+
+    final totalAmount = _calculateTotal(selectedProductsWithAppliedPromotions);
+
     emit(CheckoutState(
       selectedProductsWithAppliedPromotions:
           selectedProductsWithAppliedPromotions,
@@ -25,10 +27,10 @@ class CheckoutCubit extends Cubit<CheckoutState> {
 
   List<SelectedProduct> _calculatePromotions(
       List<Product> selectedProducts, SpecialPrices specialPrices) {
-    Map<String, int> itemCounts = {};
+    Map<String, int> itemCountsMap = {};
 
     for (final product in selectedProducts) {
-      itemCounts[product.name] = (itemCounts[product.name] ?? 0) + 1;
+      itemCountsMap[product.name] = (itemCountsMap[product.name] ?? 0) + 1;
     }
 
     List<SelectedProduct> appliedPromotions = [];
@@ -36,11 +38,11 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     // Apply meal deal promotions first
     if (!specialPrices.mealDealPromotions.isNullOrEmpty) {
       _applyMealDeal(selectedProducts, specialPrices.mealDealPromotions!,
-          itemCounts, appliedPromotions);
+          itemCountsMap, appliedPromotions);
     }
 
-    for (final item in itemCounts.keys) {
-      int count = itemCounts[item]!;
+    for (final item in itemCountsMap.keys) {
+      int count = itemCountsMap[item]!;
       int unitPrice = selectedProducts.firstWhere((p) => p.name == item).price;
 
       // Apply multi-priced promotions
@@ -94,16 +96,20 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   void _applyMealDeal(
       List<Product> selectedProducts,
       List<MealDealPromotion> mealDealPromotions,
-      Map<String, int> itemCounts,
+      Map<String, int> itemCountsMap,
       List<SelectedProduct> appliedPromotions) {
     for (MealDealPromotion promotion in mealDealPromotions) {
+      // The only meal deal works with two products
+      // Can be enhanced to accept N products
       final firstProductId = promotion.productIds[0];
       final secondProductId = promotion.productIds[1];
 
-      if (itemCounts.containsKey(firstProductId) &&
-          itemCounts.containsKey(secondProductId)) {
-        final countFirstProduct = itemCounts[firstProductId]!;
-        final countSecondProduct = itemCounts[secondProductId]!;
+      // Check if the productsId exist
+      if (itemCountsMap.containsKey(firstProductId) &&
+          itemCountsMap.containsKey(secondProductId)) {
+        final countFirstProduct = itemCountsMap[firstProductId]!;
+        final countSecondProduct = itemCountsMap[secondProductId]!;
+
         final unitPriceFirstProduct =
             selectedProducts.firstWhere((p) => p.name == firstProductId).price;
         final unitPriceSecondProduct =
@@ -133,8 +139,8 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         ));
 
         // Remove the counts that have been applied to meal deal promotion
-        itemCounts[firstProductId] = remainingFirstProducts;
-        itemCounts[secondProductId] = remainingSecondProducts;
+        itemCountsMap[firstProductId] = remainingFirstProducts;
+        itemCountsMap[secondProductId] = remainingSecondProducts;
       }
     }
   }
