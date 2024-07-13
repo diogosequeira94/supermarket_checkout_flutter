@@ -173,6 +173,7 @@ class _TotalPriceTextWidget extends StatelessWidget {
     return BlocBuilder<CheckoutCubit, CheckoutState>(
       builder: (context, state) {
         return Text(
+          key: const Key('totalPriceText_key'),
           'Total: ${state.totalAmount.toString()}p',
           style: const TextStyle(fontSize: 18.0),
         );
@@ -187,6 +188,7 @@ class _SelectedProductsList extends StatelessWidget {
     return BlocBuilder<CheckoutCubit, CheckoutState>(
       builder: (context, state) {
         return Visibility(
+          key: const Key('selectedProductsList_key'),
           visible: state.selectedProductsWithAppliedPromotions.isNotEmpty,
           child: SelectedProductsList(
             products: state.selectedProductsWithAppliedPromotions,

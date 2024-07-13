@@ -35,14 +35,14 @@ void main() {
         'emits [CheckoutState] correctly after applying a multiPricePromotion',
         setUp: () {},
         build: () => checkoutCubit,
-        act: (bloc) {
+        act: (cubit) {
           const specialPrices = SpecialPrices(
             multiPricedPromotions: [multiPricePromotion],
             buyNGetFreePromotions: null,
             mealDealPromotions: null,
           );
 
-          checkoutCubit.updateCheckout(
+          cubit.updateCheckout(
             multiPricedProductsMock,
             specialPrices,
           );
@@ -72,14 +72,14 @@ void main() {
         'emits [CheckoutState] correctly after applying a double multiPricePromotion',
         setUp: () {},
         build: () => checkoutCubit,
-        act: (bloc) {
+        act: (cubit) {
           const specialPrices = SpecialPrices(
             multiPricedPromotions: [multiPricePromotion],
             buyNGetFreePromotions: null,
             mealDealPromotions: null,
           );
 
-          checkoutCubit.updateCheckout(
+          cubit.updateCheckout(
             [...multiPricedProductsMock, ...multiPricedProductsMock],
             specialPrices,
           );
@@ -118,14 +118,14 @@ void main() {
         'emits [CheckoutState] correctly after applying a buyNGetFree',
         setUp: () {},
         build: () => checkoutCubit,
-        act: (bloc) {
+        act: (cubit) {
           const specialPrices = SpecialPrices(
             multiPricedPromotions: null,
             buyNGetFreePromotions: [buyNGetFreePromotion],
             mealDealPromotions: null,
           );
 
-          checkoutCubit.updateCheckout(
+          cubit.updateCheckout(
             buyNGetFreeProductsMock,
             specialPrices,
           );
@@ -149,14 +149,14 @@ void main() {
         'emits [CheckoutState] correctly after applying a double buyNGetFree',
         setUp: () {},
         build: () => checkoutCubit,
-        act: (bloc) {
+        act: (cubit) {
           const specialPrices = SpecialPrices(
             multiPricedPromotions: null,
             buyNGetFreePromotions: [buyNGetFreePromotion],
             mealDealPromotions: null,
           );
 
-          checkoutCubit.updateCheckout(
+          cubit.updateCheckout(
             [...buyNGetFreeProductsMock, ...buyNGetFreeProductsMock],
             specialPrices,
           );
@@ -172,6 +172,20 @@ void main() {
               ),
             ],
             totalAmount: 400,
+          ),
+        ],
+      );
+
+      blocTest<CheckoutCubit, CheckoutState>(
+        'emits [CheckoutState.initial] with [checkoutInProgress] when calling [resetCheckout()]',
+        setUp: () {},
+        build: () => checkoutCubit,
+        act: (cubit) {
+          cubit.resetCheckout();
+        },
+        expect: () => [
+          CheckoutState.initial(
+            checkoutInProgress: true,
           ),
         ],
       );

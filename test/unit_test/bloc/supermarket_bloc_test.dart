@@ -5,12 +5,8 @@ import 'package:fluro_checkout/repository/repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../mock_classes.dart';
 import '../unit_test_helpers.dart';
-
-class MockSupermarketRepository extends Mock implements SupermarketRepository {}
-
-class MockCheckoutCubit extends MockCubit<CheckoutState>
-    implements CheckoutCubit {}
 
 void main() {
   late SupermarketRepository supermarketRepository;
