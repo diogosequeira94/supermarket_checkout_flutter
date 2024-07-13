@@ -5,6 +5,8 @@ import 'package:fluro_checkout/repository/repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../unit_test_helpers.dart';
+
 class MockSupermarketRepository extends Mock implements SupermarketRepository {}
 
 class MockCheckoutCubit extends MockCubit<CheckoutState>
@@ -273,6 +275,123 @@ void main() {
         verify: (_) {
           verify(() => supermarketRepository.preloadSupermarketInfo())
               .called(1);
+        },
+      );
+    });
+
+    group('SupermarketFinishShopPressed', () {
+      const updatedSpecialPrices = SpecialPrices(
+          multiPricedPromotions: null,
+          buyNGetFreePromotions: null,
+          mealDealPromotions: [mealDealPromotion]);
+
+      blocTest<SupermarketBloc, SupermarketState>(
+        'should return same products and updated promotions when [SupermarketFinishShopPressed] is added',
+        setUp: () {
+          when(() => supermarketRepository.preloadSupermarketInfo())
+              .thenAnswer((_) async => preloadInformation);
+          when(() => supermarketRepository.getSpecialPrices())
+              .thenAnswer((_) async => updatedSpecialPrices);
+        },
+        build: () => supermarketBloc,
+        act: (bloc) async {
+          bloc.add(const SupermarketLoadStarted());
+          await Future.delayed(const Duration(milliseconds: 100));
+          expect(bloc.specialPrices, preloadInformation.specialPrices);
+
+          bloc.add(const SupermarketFinishShopPressed());
+          await Future.delayed(const Duration(milliseconds: 100));
+          expect(bloc.specialPrices, updatedSpecialPrices);
+        },
+        expect: () => [
+          const SupermarketState(
+            status: SupermarketStatus.loading,
+            selectedProducts: [],
+          ),
+          SupermarketState(
+            status: SupermarketStatus.loaded,
+            products: preloadInformation.products,
+            selectedProducts: const [],
+          ),
+          SupermarketState(
+            status: SupermarketStatus.loading,
+            products: preloadInformation.products,
+            selectedProducts: const [],
+          ),
+          SupermarketState(
+            status: SupermarketStatus.loaded,
+            products: preloadInformation.products,
+            selectedProducts: const [],
+          ),
+        ],
+        verify: (_) {
+          verify(() => supermarketRepository.preloadSupermarketInfo())
+              .called(1);
+          verify(() => supermarketRepository.getSpecialPrices()).called(1);
+        },
+      );
+
+      blocTest<SupermarketBloc, SupermarketState>(
+        'should throw error when getting an Exception after [SupermarketFinishShopPressed] is added',
+        setUp: () {
+          when(() => supermarketRepository.preloadSupermarketInfo())
+              .thenAnswer((_) async => preloadInformation);
+          when(() => supermarketRepository.getSpecialPrices()).thenAnswer(
+              (_) async => Future.error(
+                  SupermarketUnknownErrorException(statusCode: 600)));
+        },
+        build: () => supermarketBloc,
+        act: (bloc) {
+          bloc.add(const SupermarketLoadStarted());
+          bloc.add(const SupermarketFinishShopPressed());
+        },
+        expect: () => [
+          const SupermarketState(
+            status: SupermarketStatus.loading,
+            selectedProducts: [],
+          ),
+          SupermarketState(
+            status: SupermarketStatus.loaded,
+            products: preloadInformation.products,
+            selectedProducts: const [],
+          ),
+          SupermarketState(
+            status: SupermarketStatus.loading,
+            products: preloadInformation.products,
+            selectedProducts: const [],
+          ),
+          SupermarketState(
+            status: SupermarketStatus.error,
+            products: preloadInformation.products,
+            selectedProducts: const [],
+            errorMessage: 'Ooops, something went wrong, please try again!',
+          ),
+        ],
+        verify: (_) {
+          verify(() => supermarketRepository.preloadSupermarketInfo())
+              .called(1);
+          verify(() => supermarketRepository.getSpecialPrices()).called(1);
+        },
+      );
+
+      blocTest<SupermarketBloc, SupermarketState>(
+        'should call [resetCheckout] on [CheckoutCubit] when [SupermarketFinishShopPressed] is added',
+        setUp: () {
+          when(() => supermarketRepository.preloadSupermarketInfo())
+              .thenAnswer((_) async => preloadInformation);
+          when(() => supermarketRepository.getSpecialPrices())
+              .thenAnswer((_) async => updatedSpecialPrices);
+        },
+        build: () => supermarketBloc,
+        act: (bloc) {
+          bloc.add(const SupermarketLoadStarted());
+          bloc.add(const SupermarketFinishShopPressed());
+        },
+        verify: (_) {
+          verify(() => supermarketRepository.preloadSupermarketInfo())
+              .called(1);
+          verify(() => supermarketRepository.getSpecialPrices()).called(1);
+          verify(() => checkoutCubit.resetCheckout()).called(1);
         },
       );
     });

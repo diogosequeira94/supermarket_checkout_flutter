@@ -31,5 +31,13 @@ void main() {
         );
       });
     });
+    group('SupermarketFinishShopPressed', () {
+      test('props', () {
+        expect(
+          const SupermarketFinishShopPressed().props,
+          [],
+        );
+      });
+    });
   });
 }

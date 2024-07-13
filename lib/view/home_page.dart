@@ -103,7 +103,6 @@ class HomePage extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // Your onPressed code here
                             if (state.selectedProducts.isEmpty) {
                               const snackBar = SnackBar(
                                 content: Text(

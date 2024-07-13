@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fluro_checkout/cubit/checkout_cubit.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../repository/repository.dart';
 
@@ -30,6 +31,9 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
 
   late List<Product> _products;
   late SpecialPrices _specialPrices;
+
+  @visibleForTesting
+  SpecialPrices get specialPrices => _specialPrices;
 
   Future<void> _preloadSupermarketInfo(
       SupermarketLoadStarted event, Emitter<SupermarketState> emit) async {
