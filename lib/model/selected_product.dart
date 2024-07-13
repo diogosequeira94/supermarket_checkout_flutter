@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+/// A UI Model that should be used to interact with a [Product]
 class SelectedProduct extends Equatable {
   final String name;
   final num? oldPrice;

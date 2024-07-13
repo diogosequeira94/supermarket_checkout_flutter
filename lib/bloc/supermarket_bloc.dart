@@ -10,6 +10,8 @@ import '../repository/repository.dart';
 part 'supermarket_event.dart';
 part 'supermarket_state.dart';
 
+/// Business Logic Component used to get Supermarket Information
+/// Responsible for Scanning and Removing selected products from the list
 class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   SupermarketBloc({
     required SupermarketRepository supermarketRepository,
@@ -23,7 +25,7 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
     on<SupermarketLoadStarted>(_preloadSupermarketInfo);
     on<SupermarketSelectProductPressed>(_scanProduct);
     on<SupermarketProductRemoveSelectedPressed>(_removeSelectedProduct);
-    on<SupermarketFinishShopPressed>(_finishShop);
+    on<SupermarketFinishShopPressed>(_finishShoppingSession);
   }
 
   final SupermarketRepository _supermarketRepository;
@@ -57,12 +59,11 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   }
 
   /// Used to perform operations on [selectedProducts]
-  /// Can either add (scan) or remove products from the list
+  /// Can add (scan) products to the list
   /// Delegates to CheckoutCubit
   void _scanProduct(
       SupermarketSelectProductPressed event, Emitter<SupermarketState> emit) {
     final selectedProductsList = List<Product>.from(state.selectedProducts);
-
     selectedProductsList.add(event.product);
 
     _checkoutCubit.updateCheckout(selectedProductsList, _specialPrices);
@@ -70,6 +71,9 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
     emit(state.copyWith(selectedProducts: selectedProductsList));
   }
 
+  /// Used to perform operations on [selectedProducts]
+  /// Can remove products from the list
+  /// Delegates to CheckoutCubit
   void _removeSelectedProduct(SupermarketProductRemoveSelectedPressed event,
       Emitter<SupermarketState> emit) {
     final selectedProductsList = List<Product>.from(state.selectedProducts);
@@ -83,7 +87,6 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
         /// Remove one D and one E
         return true;
       }
-
       return productName == selectedName;
     });
 
@@ -92,11 +95,13 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
     }
 
     _checkoutCubit.updateCheckout(selectedProductsList, _specialPrices);
-
     emit(state.copyWith(selectedProducts: selectedProductsList));
   }
 
-  Future<void> _finishShop(SupermarketFinishShopPressed event,
+  /// Finishes shopping session
+  /// Delegates to [CheckoutCubit] to clean the state
+  /// Fetches possible new SpecialPrices/Promotions
+  Future<void> _finishShoppingSession(SupermarketFinishShopPressed event,
       Emitter<SupermarketState> emit) async {
     _checkoutCubit.resetCheckout();
 

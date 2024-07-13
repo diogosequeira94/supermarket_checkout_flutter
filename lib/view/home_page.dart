@@ -56,6 +56,7 @@ class HomePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           ProductsList(
+                            key: const Key('productsList_key'),
                             products: state.products!,
                           ),
                           Padding(
@@ -80,54 +81,39 @@ class HomePage extends StatelessWidget {
                             children: [
                               _TotalPriceTextWidget(),
                               const SizedBox(height: 4.0),
-                              const Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    Icons.info,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(width: 4.0),
-                                  Flexible(
-                                    child: Text(
-                                      'Promotions are calculated automatically',
-                                      style: TextStyle(color: Colors.black),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              const PromotionsDisclaimerWidget(),
                             ],
                           ),
                         ),
-                        ElevatedButton(
-                          key: const Key('checkoutButton_key'),
-                          onPressed: () {
-                            if (state.selectedProducts.isEmpty) {
-                              const snackBar = SnackBar(
-                                key: Key('checkoutButton_snackBar_key'),
-                                content: Text(
-                                    'Please select some products first :)'),
-                                duration: Duration(seconds: 2),
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else {
-                              _openCheckoutConfirmationDialog(context);
-                            }
-                          },
-                          child: const Text('Checkout'),
-                        ),
+                        CheckoutButtonWidget(
+                          onTap: () => _onCheckoutTapped(
+                            context,
+                            state.selectedProducts.isNotEmpty,
+                          ),
+                        )
                       ],
                     ),
                   ),
                 ],
               );
             } else if (status == SupermarketStatus.error) {
-              return const Center(
-                key: Key('errorWidget_key'),
-                child: Text('Error!'),
+              return Center(
+                key: const Key('errorWidget_key'),
+                child: Column(
+                  children: [
+                    Text(
+                      state.errorMessage!,
+                      style: const TextStyle(fontSize: 22.0),
+                    ),
+                    const SizedBox(height: 15.0),
+                    SupermarketPrimaryButton(
+                      buttonText: 'Retry',
+                      onTap: () => context.read<SupermarketBloc>().add(
+                            const SupermarketLoadStarted(),
+                          ),
+                    ),
+                  ],
+                ),
               );
             }
             return const SizedBox.shrink();
@@ -135,6 +121,19 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onCheckoutTapped(BuildContext context, bool hasSelectedProducts) {
+    if (!hasSelectedProducts) {
+      const snackBar = SnackBar(
+        key: Key('checkoutButton_snackBar_key'),
+        content: Text('Please select some products first :)'),
+        duration: Duration(seconds: 2),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      _openCheckoutConfirmationDialog(context);
+    }
   }
 
   void _openCheckoutConfirmationDialog(BuildContext context) {

@@ -1,7 +1,7 @@
 import 'package:fluro_checkout/view/intro_page.dart';
 import 'package:flutter/material.dart';
 
-/// This is not a native splashScreen
+/// A non native SplashScreen
 /// Added for demonstration purposes
 class SupermarketSplashScreen extends StatefulWidget {
   const SupermarketSplashScreen({super.key});

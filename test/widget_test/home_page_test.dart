@@ -98,9 +98,9 @@ void main() {
           (tester) async {
         when(() => supermarketBloc.state).thenReturn(
           const SupermarketState(
-            selectedProducts: [],
-            status: SupermarketStatus.error,
-          ),
+              selectedProducts: [],
+              status: SupermarketStatus.error,
+              errorMessage: 'Oops, something went wrong! Please try again.'),
         );
 
         await tester.pumpWidget(widgetToTest);

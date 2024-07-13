@@ -8,6 +8,8 @@ import '../utils/extensions.dart';
 
 part 'checkout_state.dart';
 
+/// Business Logic Component used to update checkout cart
+/// Calculates and applies special prices/promotions
 class CheckoutCubit extends Cubit<CheckoutState> {
   CheckoutCubit() : super(CheckoutState.initial());
 
