@@ -30,3 +30,10 @@ final class SupermarketProductRemoveSelectedPressed extends SupermarketEvent {
   @override
   List<Object?> get props => [selectedProductName];
 }
+
+final class SupermarketFinishShopPressed extends SupermarketEvent {
+  const SupermarketFinishShopPressed();
+
+  @override
+  List<Object?> get props => [];
+}

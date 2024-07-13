@@ -1,6 +1,5 @@
 import 'package:fluro_checkout/model/selected_product.dart';
 import 'package:fluro_checkout/utils/shared_strings.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SelectedProductWidget extends StatelessWidget {

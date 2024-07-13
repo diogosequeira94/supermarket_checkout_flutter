@@ -28,6 +28,9 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
     on<SupermarketProductRemoveSelectedPressed>((event, emit) {
       _removeSelectedProduct(event, emit);
     });
+    on<SupermarketFinishShopPressed>((event, emit) async {
+      await _finishShop(event, emit);
+    });
   }
 
   final SupermarketRepository _supermarketRepository;
@@ -37,9 +40,8 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   late SpecialPrices _specialPrices;
 
   Future<void> _preloadSupermarketInfo(Emitter<SupermarketState> emit) async {
+    emit(state.copyWith(status: SupermarketStatus.loading));
     try {
-      emit(state.copyWith(status: SupermarketStatus.loading));
-
       final supermarketInfo =
           await _supermarketRepository.preloadSupermarketInfo();
 
@@ -95,6 +97,30 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
     _checkoutCubit.updateCheckout(selectedProductsList, _specialPrices);
 
     emit(state.copyWith(selectedProducts: selectedProductsList));
+  }
+
+  Future<void> _finishShop(SupermarketFinishShopPressed event,
+      Emitter<SupermarketState> emit) async {
+    _checkoutCubit.resetCheckout();
+
+    try {
+      emit(state
+          .copyWith(status: SupermarketStatus.loading, selectedProducts: []));
+
+      final promotions = await _supermarketRepository.getSpecialPrices();
+      if (promotions != null) {
+        _specialPrices = promotions;
+      }
+
+      emit(state.copyWith(
+        status: SupermarketStatus.loaded,
+        products: _products,
+      ));
+    } on Object catch (e) {
+      emit(state.copyWith(
+          status: SupermarketStatus.error,
+          errorMessage: _convertToExceptionLog(e)));
+    }
   }
 
   String _convertToExceptionLog(Object exception) {

@@ -139,6 +139,10 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     }
   }
 
+  void resetCheckout() {
+    emit(CheckoutState.initial(checkoutInProgress: true));
+  }
+
   int _calculateTotal(List<SelectedProduct> appliedPromotions) {
     return appliedPromotions.fold(
         0, (total, promo) => total + promo.currentPrice);
