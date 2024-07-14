@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: Text(
-                                'Products (SKUs): ${state.products?.length ?? 'N/A'}'),
+                                'Products: ${state.products?.length ?? 'N/A'}'),
                           ),
                           ProductsList(
                             key: const Key('productsList_key'),
