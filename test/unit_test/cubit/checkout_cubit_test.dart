@@ -181,7 +181,7 @@ void main() {
         setUp: () {},
         build: () => checkoutCubit,
         act: (cubit) {
-          cubit.resetCheckout();
+          cubit.resetCheckout(fromCheckout: true);
         },
         expect: () => [
           CheckoutState.initial(

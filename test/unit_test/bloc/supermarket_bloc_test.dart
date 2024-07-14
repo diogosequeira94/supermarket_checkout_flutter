@@ -387,7 +387,8 @@ void main() {
           verify(() => supermarketRepository.preloadSupermarketInfo())
               .called(1);
           verify(() => supermarketRepository.getSpecialPrices()).called(1);
-          verify(() => checkoutCubit.resetCheckout()).called(1);
+          verify(() => checkoutCubit.resetCheckout(fromCheckout: true))
+              .called(1);
         },
       );
     });
