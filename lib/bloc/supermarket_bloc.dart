@@ -39,6 +39,15 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
 
   Future<void> _preloadSupermarketInfo(
       SupermarketLoadStarted event, Emitter<SupermarketState> emit) async {
+    /// If a user goes back to InitialPage with a session ongoing
+    if (state.selectedProducts.isNotEmpty) {
+      _checkoutCubit.resetCheckout();
+      emit(const SupermarketState(
+        status: SupermarketStatus.initial,
+        selectedProducts: [],
+      ));
+    }
+
     emit(state.copyWith(status: SupermarketStatus.loading));
     try {
       final supermarketInfo =
@@ -103,7 +112,7 @@ class SupermarketBloc extends Bloc<SupermarketEvent, SupermarketState> {
   /// Fetches possible new SpecialPrices/Promotions
   Future<void> _finishShoppingSession(SupermarketFinishShopPressed event,
       Emitter<SupermarketState> emit) async {
-    _checkoutCubit.resetCheckout();
+    _checkoutCubit.resetCheckout(fromCheckout: true);
 
     try {
       emit(state

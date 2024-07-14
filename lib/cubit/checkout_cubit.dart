@@ -142,8 +142,8 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     }
   }
 
-  void resetCheckout() {
-    emit(CheckoutState.initial(checkoutInProgress: true));
+  void resetCheckout({bool fromCheckout = false}) {
+    emit(CheckoutState.initial(checkoutInProgress: fromCheckout));
   }
 
   int _calculateTotal(List<SelectedProduct> appliedPromotions) {
