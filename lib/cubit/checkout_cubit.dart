@@ -95,6 +95,8 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     return appliedPromotions;
   }
 
+  /// Used to calculate the price for a meal deal promotion
+  /// (e.g: buy D and E for £3).
   void _applyMealDeal(
       List<Product> selectedProducts,
       List<MealDealPromotion> mealDealPromotions,
@@ -117,32 +119,25 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         final unitPriceSecondProduct =
             selectedProducts.firstWhere((p) => p.name == secondProductId).price;
 
-        // Calculate the remaining items
+        // Calculate the number of complete sets of the meal deal
         final setsOfItems = (countFirstProduct < countSecondProduct)
             ? countFirstProduct
             : countSecondProduct;
-        final remainingFirstProducts = countFirstProduct - setsOfItems;
-        final remainingSecondProducts = countSecondProduct - setsOfItems;
 
-        // Apply the meal deal promotion using the extension method
-        final promotionPrice = promotion.calculatePrice(
-          itemCountFirstProduct: countFirstProduct,
-          itemCountSecondProduct: countSecondProduct,
-          priceFirstProduct: unitPriceFirstProduct,
-          priceSecondProduct: unitPriceSecondProduct,
-        );
+        // Apply the meal deal promotion
+        final promotionPrice = setsOfItems * promotion.dealPrice;
 
         appliedPromotions.add(SelectedProduct(
           name: '${firstProductId} + ${secondProductId}',
           oldPrice:
               (unitPriceFirstProduct + unitPriceSecondProduct) * setsOfItems,
           currentPrice: promotionPrice,
-          promotionApplied: SharedStrings.mealDealPromotion,
+          promotionApplied: 'Meal Deal Promotion',
         ));
 
-        // Remove the counts that have been applied to meal deal promotion
-        itemCountsMap[firstProductId] = remainingFirstProducts;
-        itemCountsMap[secondProductId] = remainingSecondProducts;
+        // Update the remaining counts of items
+        itemCountsMap[firstProductId] = countFirstProduct - setsOfItems;
+        itemCountsMap[secondProductId] = countSecondProduct - setsOfItems;
       }
     }
   }
