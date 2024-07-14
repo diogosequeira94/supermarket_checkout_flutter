@@ -21,6 +21,15 @@ Follow the official installation guides:
 - [Install Dart](https://dart.dev/get-dart)
 - [Install Flutter](https://flutter.dev/docs/get-started/install)
 
+## Flutter Version
+
+This project requires Flutter version `>=3.3.3 <4.0.0`. Please ensure you have a compatible version installed.
+
+To check your Flutter version, run:
+```sh
+flutter --version
+```
+
 ## Setup
 
 ### 1. Get dependencies
