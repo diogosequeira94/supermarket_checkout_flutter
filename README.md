@@ -43,3 +43,51 @@ To check existing unit/widget tests that can be checked by running:
 ```sh
 flutter test
 ```
+
+## Structure overview
+
+```
+  fluro_checkout/
+    ├── lib/
+    │   ├── src/
+    │   │   ├── bloc/
+    │   │   │   ├── supermarket_bloc.dart
+    │   │   │   ├── supermarket_event.dart
+    │   │   │   ├── supermarket_state.dart      
+    │   │   ├── cubit/
+    │   │   │   ├── checkout_cubit.dart
+    │   │   │   ├── checkout_state.dart
+    │   │   ├── model/
+    │   │   │   ├── selected_product.dart     
+    │   │   ├── repository/
+    │   │   │   │   ├── api/
+    │   │   │   │   │   ├── supermarket_api_client.dart        
+    │   │   │   │   ├── data/
+    │   │   │   │   │   ├── mock-products.json
+    │   │   │   │   │   ├── mock-special-prices.json  
+    │   │   │   │   │   ├── mock-supermarket-info-response.json
+    │   │   │   │   ├── errors/
+    │   │   │   │   │   ├── errors.dart
+    │   │   │   │   │   ├── supermarket_exception.dart 
+    │   │   │   │   ├── models/
+    |   │   │   │   │   │   ├── product/ ---> model classes that are part of a product
+    |   │   │   │   │   │   ├── special_price/ ---> model classes that are part of promotion
+    │   │   │   │   │   ├── models.dart
+    │   │   │   │   │   ├── supermarket_info_response.dart 
+    │   │   │   │   │   ├── supermarket_info_response.g
+    │   │   │   │   ├── repository.dart ---> barrel file
+    │   │   │   │   ├── supermarket_repository.dart
+    │   │   ├── view/
+    │   │   │   │   ├── widgets/ ---> widgets that compose the UI of home_page     
+    │   │   │   │   ├── home_page.dart
+    │   │   │   │   ├── intro_page.dart
+    │   ├── main.dart
+    │   ├── super_market_splash_screen.dart
+    ├── test/
+    │   ├── unit_test/
+    │   ├── widget_test/
+    ├── .gitignore
+    ├── analysis_options.yaml
+    ├── pubspec.yaml
+    └── README.md
+```
