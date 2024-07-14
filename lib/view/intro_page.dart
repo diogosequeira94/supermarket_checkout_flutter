@@ -56,28 +56,6 @@ class IntroPage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20.0),
-            SizedBox(
-              width: 250,
-              height: 65,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.all(16.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
-                child: const Text(
-                  'Kata Information',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
