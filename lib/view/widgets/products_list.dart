@@ -12,28 +12,32 @@ class ProductsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final supermarketBloc = context.read<SupermarketBloc>();
-    return GridView.builder(
-      shrinkWrap: true,
-      itemCount: products.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Adjust the number of columns as needed
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
-        childAspectRatio: 3 / 2, // Adjust the aspect ratio as needed
+    final ScrollController scrollController = ScrollController();
+    final phoneHeight = MediaQuery.of(context).size.height;
+    return SizedBox(
+      height: phoneHeight * 0.35,
+      child: Scrollbar(
+        controller: scrollController,
+        thumbVisibility: true, // Use this instead
+        child: ListView.builder(
+          controller: scrollController,
+          shrinkWrap: true,
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            final product = products[index];
+            return ProductItem(
+              onTap: () => supermarketBloc.add(
+                SupermarketSelectProductPressed(
+                  product: product,
+                ),
+              ),
+              name: product.name,
+              price: product.price,
+              imageId: product.imageId,
+            );
+          },
+        ),
       ),
-      itemBuilder: (context, index) {
-        final product = products[index];
-        return ProductItem(
-          onTap: () => supermarketBloc.add(
-            SupermarketSelectProductPressed(
-              product: product,
-            ),
-          ),
-          name: product.name,
-          price: product.price,
-          imageId: product.imageId,
-        );
-      },
     );
   }
 }

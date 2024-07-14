@@ -53,12 +53,15 @@ class _SupermarketSplashScreenState extends State<SupermarketSplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/logo.png'),
-            const SizedBox(height: 16.0),
+            Image.asset(
+              'assets/logo.png',
+              width: 300,
+              height: 300,
+            ),
             const Text(
-              'Fluro Supermarket',
+              'The Supermarket ®',
               style: TextStyle(
-                fontSize: 28.0,
+                fontSize: 24.0,
                 fontStyle: FontStyle.italic,
                 color: Colors.white,
                 fontWeight: FontWeight.w400,

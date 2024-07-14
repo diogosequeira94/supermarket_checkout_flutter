@@ -16,7 +16,7 @@ class PromotionsDisclaimerWidget extends StatelessWidget {
         Flexible(
           child: Text(
             'Promotions are calculated automatically',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black38, fontSize: 14.0),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

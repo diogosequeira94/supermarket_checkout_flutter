@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text(
-          'Fluro Supermarket',
+          'The Supermarket ®',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -55,6 +55,11 @@ class HomePage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Text(
+                                'Products (SKUs): ${state.products?.length ?? 'N/A'}'),
+                          ),
                           ProductsList(
                             key: const Key('productsList_key'),
                             products: state.products!,

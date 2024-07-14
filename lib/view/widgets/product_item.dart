@@ -17,22 +17,27 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 14.0, 8.0),
       child: InkWell(
         onTap: () => onTap(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
+        child: Card(
+          margin: EdgeInsets.zero,
+          child: ListTile(
+            leading: Image.asset(
               imageId,
-              height: 50,
-              width: 50,
+              height: 35,
+              width: 35,
             ),
-            Text(name,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text('$price pence', style: const TextStyle(fontSize: 16)),
-          ],
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(name,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(' - $price pence', style: const TextStyle(fontSize: 16)),
+              ],
+            ),
+          ),
         ),
       ),
     );
