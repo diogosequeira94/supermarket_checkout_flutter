@@ -8,6 +8,7 @@ Fluro Checkout is an application that allows you to buy your favorite products (
 - Enjoy various promotions and discounts (MultiPriced, BuyNGetFree and MealDeals)
 - Information about your promotions on the fly
 - Proceed to checkout (start a new shopping session)
+- Fetches the SpecialOffers/Promotions on every checkout completed (as promotions can change, this way we ensure we get a fresh and valid list).
 
 ## PreRequisites
 
