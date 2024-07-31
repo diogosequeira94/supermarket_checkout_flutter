@@ -1,6 +1,6 @@
-# Fluro Checkout
+# Supermarket Checkout
 
-Fluro Checkout is an application that allows you to buy your favorite products (SKUs)! You can scan (add) products to your ShoppingCart, enjoy promotions, and proceed to checkout.
+Supermarket Checkout is an application that allows you to buy your favorite products (SKUs)! You can scan (add) products to your ShoppingCart, enjoy promotions, and proceed to checkout.
 
 ## Features
 
