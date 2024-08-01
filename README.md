@@ -2,6 +2,8 @@
 
 Supermarket Checkout is an application that allows you to buy your favorite products (SKUs)! You can scan (add) products to your ShoppingCart, enjoy promotions, and proceed to checkout.
 
+![fluro_challenge_demo-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/4ad0ddfe-0795-4f99-9a04-3fc3640b5459)
+
 ## Features
 
 - Add products to your shopping cart by scanning SKUs
